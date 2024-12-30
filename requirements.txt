@@ -1,0 +1,5 @@
+flask
+requests
+streamingcommunity-unofficialapi
+rapidfuzz
+deep-translator
