@@ -1,5 +1,5 @@
 flask
 requests
--e libs/scuapi
+-e ./libs/scuapi
 rapidfuzz
 deep-translator
