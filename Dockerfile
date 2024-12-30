@@ -7,11 +7,11 @@ WORKDIR /app
 # Copia i file requirements.txt
 COPY requirements.txt ./
 
-# Installa le dipendenze senza scuapi
-RUN pip install --no-cache-dir -r requirements.txt
+# Copia la directory della libreria modificata
+COPY libs/scuapi ./libs/scuapi
 
-# Copia il file scuapi.py nella directory site-packages
-COPY lib/python3.13/site-packages/scuapi/scuapi.py /usr/local/lib/python3.11/site-packages/scuapi/scuapi.py
+# Installa le dipendenze (incluso scuapi)
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copia il resto del codice sorgente
 COPY . .
