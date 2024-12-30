@@ -1,5 +1,5 @@
 flask
 requests
-streamingcommunity-unofficialapi
+-e libs/scuapi
 rapidfuzz
 deep-translator
