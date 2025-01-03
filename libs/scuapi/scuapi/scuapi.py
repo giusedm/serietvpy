@@ -141,7 +141,25 @@ class API:
     def search(self, query):
         """
         Cerca nell'API una determinata query e restituisce una lista di risultati.
+        Cerca nell'API una determinata query e restituisce una lista di risultati.
+        Searches the API for a given query and returns a list of results.
+
+        Args:
+            query (str):
+                La query di ricerca.
+                The search query.
+
+        Returns:
+            list:
+                Una lista di risultati della ricerca.
+                A list of search results.
+
+        Example:
+        ```
+        search_result = search('something')
+        ```
         """
+
         headers = {"user-agent": self.user_agent}
         query_formatted = query.replace(" ", "%20")
         url = f"{self._url.geturl()}/api/search?q={query_formatted}"
@@ -179,8 +197,8 @@ class API:
         Returns:
             dict:
                 Un dizionario contenente informazioni minimali sull'elemento:
-                A dictionary containing detailed information about the item:
-                    {id, type, runtime, release_date, quality, plot, seasons_count, preview (only for movies), images, generes}.
+                A dictionary containing minimal information about the item:
+                    {id, type, runtime, release_date, quality, plot, seasons_count, preview (only for movies), images, genres}.
 
         Example:
         ```
@@ -229,7 +247,6 @@ class API:
         url = self._url.geturl() + "/titles/" + content_slug
         try:
             # Ottenere la risposta dell'url dell'elemento
-            # Get the response of the item's url
             resp = self._wbpage_as_text(url)
             data = json.loads(
                 self._html_regex(r'data-page="([\s\S]+})"', resp, "page data")
@@ -240,7 +257,6 @@ class API:
         preview_data = self.preview(content_slug)
 
         # Estrarre i vari dati
-        # Extract the various data
         media_type = "Movie" if preview_data["type"] == "movie" else "TvSeries"
 
         images = preview_data["images"]
@@ -273,7 +289,6 @@ class API:
         sub_ita = props["title"]["sub_ita"]
 
         # Estrarre i dati degli episodi per le serie
-        # Extract episode data for series.
         if media_type == "TvSeries":
 
             name = props["title"]["name"]
@@ -287,7 +302,7 @@ class API:
                 season = int(se["number"])
                 se_url = f"{url}/stagione-{season}"
                 try:
-                    resp = self._wbpage_as_text(url)
+                    resp = self._wbpage_as_text(se_url)
                     se_data = json.loads(
                         self._html_regex(r'data-page="([\s\S]+})"', resp, "page data")
                     )
@@ -297,7 +312,7 @@ class API:
                 sid = se["title_id"]
                 for ep in episodes:
                     scws_id = ep["scws_id"]
-                    href = f"{self._url}/watch/{sid}?e={ep['id']}"
+                    href = f"{self._url.geturl()}/watch/{sid}?e={ep['id']}"
 
                     episode = {
                         "name": ep["name"],
@@ -381,7 +396,6 @@ class API:
         ```
         iframe, m3u8_playlist = get_links(50636)
         ```
-
         """
 
         webpage = self._wbpage_as_text(
@@ -428,7 +442,7 @@ class API:
         )
         # video_info = json.loads(self._html_regex(r'window\.video[^{]+({[^<]+});',vixcloud_iframe, "video info")
 
-        # Generate the polaylist url
+        # Generate the playlist url
         dl_url = (
             playlist_url
             + ("&" if bool(re.search(r"\?[^#]+", playlist_url)) else "?")
@@ -439,3 +453,15 @@ class API:
         )
 
         return iframe_url, dl_url
+
+
+# Esempio di utilizzo
+if __name__ == "__main__":
+    sc = API("streamingcommunity.prof")
+    # Esempio per ottenere i link
+    try:
+        iframe, m3u8_playlist = sc.get_links("8052")
+        print(f"Iframe URL: {iframe}")
+        print(f"M3U8 Playlist URL: {m3u8_playlist}")
+    except SCAPIError as e:
+        print(e)
