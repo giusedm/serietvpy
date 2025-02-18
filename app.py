@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s %(mes
 app = Flask(__name__)
 
 # Imposta il dominio StreamingCommunity da usare
-sc = API('streamingcommunity.prof')  # Assicurati che il dominio sia corretto e in minuscolo
+sc = API('streamingcommunity.lu')  # Assicurati che il dominio sia corretto e in minuscolo
 
 # TMDb API key (utilizza una variabile d'ambiente per sicurezza)
 TMDB_API_KEY = os.getenv('TMDB_API_KEY', 'bec469490202847eee0bec57cfe9349a')  # Sostituisci con il tuo metodo di gestione delle chiavi
